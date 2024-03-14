@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.5/umd/popper.js"></script>
+  
+  <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.16/js/dataTables.bootstrap4.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.16/css/dataTables.bootstrap4.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+<link rel="stylesheet" href="/style.css">
+
+<script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+  <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/css/bootstrap.min.css">
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/gaugeJS/dist/gauge.min.js"></script>
+            <script src ="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+                     <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+                     <script src ="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+      <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+      <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+      <a style="font-weight: bold; font-size: 19px; color: rgb(236, 234, 234); margin-right: 10px;" href="/dashboard.html">Dashboard</a>
+
+      <a style="font-weight: bold; font-size: 19px; color: rgb(236, 234, 234); margin-left: 10px;" href="/base.html">Individual Vehicle</a>
+
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav navbar-sidenav" id="exampleAccordion" >
+          <li class="nav-item" data-toggle="tooltip" data-placement="right" >
+            <form  id="fetchForm" action="/fetch-data" method="post" class="table-container" >
+              <input type="text" id="dateTimeRange" name="dateTimeRange" />
+              <input type="text1" id="mySearch" onkeyup="myFunction()" placeholder="Search...." title="Type in a category" >
+              <div class="table-scroll"  >
+          <table class="custom-table">
+              <thead>
+                  </thead>
+                  <tbody id="tableList">
+                  </tbody>
+              </table>
+              </div>
+              <input type="submit" value="Fetch Data">
+
+      </form>
+      </li>
+      </ul>
+
+    </div>
+  </nav>
+      <script>
+        function myFunction() {
+          var input, filter, tbody, td, tr, i;
+          input = document.getElementById("mySearch");
+          filter = input.value.toUpperCase();
+          ul = document.getElementById("tableList");
+          li = ul.getElementsByTagName("tr");
+          for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("td")[0];
+            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+              li[i].style.display = "";
+            } else {
+              li[i].style.display = "none";
+            }
+          }
+        }
+        </script>
+        <script>
+          fetch('/getTableNames')
+          .then(response => response.json())
+          .then(data => {
+              const tableList = document.getElementById('tableList');
+              let selectedRow = null;
+          
+              data.tableInfo.forEach(tableInfo => {
+                  const row = document.createElement('tr');
+                  const cell1 = document.createElement('td');
+                  const cell2 = document.createElement('td');
+                  const radio = document.createElement('input');
+                  radio.type = 'radio';
+                  radio.name = 'table';
+                  radio.value = tableInfo.tableName;
+          
+                  const displayedName = tableInfo.tableName.length > 0.7 * tableInfo.tableName.length ?
+                      tableInfo.tableName.substring(0, Math.floor(0.7 * tableInfo.tableName.length)):
+                      tableInfo.tableName;
+          
+                  cell1.textContent = displayedName;
+                  cell1.classList.add('tableNameCell');
+          
+                  // Create and append button based on row count condition
+                  const button = document.createElement('button');
+                  button.type = 'button';
+                  button.textContent = '';
+                  button.classList.add('circularButton');
+          
+                  if (tableInfo.rowCount < 5) {
+                      button.classList.add('redButton');
+                  } else if (tableInfo.rowCount > 5) {
+                      button.classList.add('greenButton');
+                  }
+          
+                  cell1.appendChild(button);
+          
+                  cell2.appendChild(radio);
+          
+                  row.appendChild(cell1);
+                  row.appendChild(cell2);
+                  tableList.appendChild(row);
+          
+                  radio.addEventListener('change', function () {
+                      const currentRow = this.closest('tr');
+          
+                      if (selectedRow) {
+                          selectedRow.classList.remove('selected');
+                      }
+          
+                      if (this.checked) {
+                          currentRow.classList.add('selected');
+                          selectedRow = currentRow;
+                      } else {
+                          selectedRow = null;
+                      }
+                  });
+              });
+          })
+          .catch(error => console.error(error));
+      </script>   
+      
+      
+    <script>
+      $(document).ready(function() {
+          $('#dateTimeRange').daterangepicker({
+              autoUpdateInput: true,
+              timePicker: true,
+              timePickerIncrement: 5,
+              locale: {
+                  cancelLabel: 'Clear',
+                  format: 'MM/DD/YYYY HH:mm',
+              },
+              minDate: '09/01/2023', // Set the minimum date
+              maxDate: moment(),    // Set the maximum date to the current date
+              ranges: {
+                  'Last Week': [moment().startOf('week').subtract(1, 'week'), moment().startOf('week').subtract(1, 'second')],
+                  'This Week': [moment().startOf('week'), moment()],
+                  'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                  'Today': [moment(), moment()],
+                  'Last Month': [moment().startOf('month').subtract(1, 'month'), moment().startOf('month').subtract(1, 'second')],
+                  'This Month': [moment().startOf('month'), moment()]
+              }
+          });        
+          $('#dateTimeRange').on('apply.daterangepicker', function(ev, picker) {
+              $(this).val(picker.startDate.format('MM/DD/YYYY HH:mm') + ' - ' + picker.endDate.format('MM/DD/YYYY HH:mm'));
+          });       
+          $('#dateTimeRange').on('cancel.daterangepicker', function() {
+              $(this).val('');
+          });
+          $('#fetchForm').submit(function(e) {
+              e.preventDefault();
+              $('#result-container').html('<div id="loading" style="position: fixed; top: 50%; left: 55%; transform: translate(-40%, -60%); text-align: center; color: blue;"><i class="fas fa-spinner fa-spin fa-4x"></i><p>Loading...</p></div>');
+              var formData = $(this).serialize();
+              $.ajax({
+                  type: 'POST',
+                  url: '/fetch-data',
+                  data: formData,
+                  dataType: 'html',
+                  success: function(response) {
+                      $('#result-container').html(response);
+                  },
+                  error: function(error) {
+                      console.error(error);
+                  }
+              });
+              function customTickText(value) {
+                // Set your desired limit for characters
+                var charLimit = 6;
+                
+                if (value.length > charLimit) {
+                    return value.substring(0, charLimit) ;
+                } else {
+                    return value;
+                }
+            }
+           $.ajax({
+    type: 'POST',
+    url: '/all-data',
+    data: formData,
+    dataType: 'json',
+
+    success: function(response) {
+        // Handle the JSON response
+        console.log(response);
+
+        // Extract data for the bar chart
+        var TableName = response.map(function(result) {
+            return customTickText(result.TableName);
+        });
+
+        var AverageSpeed = response.map(function(result) {
+            return result.AverageSpeed;
+        });
+        console.log('TableName:', TableName);
+        console.log('AverageSpeed:', AverageSpeed);
+
+        // Create a bar graph using Plotly
+        var barTrace = {
+            x: TableName,
+            y: AverageSpeed,
+            type: 'bar',
+            name: 'Bar Chart'
+        };
+
+        var barLayout = {
+            xaxis: {
+                ticklen: 3,
+                tickangle: -90,
+                tickmode: 'array',
+                tickvals: TableName,
+                ticktext: TableName.map(customTickText),
+                type: 'category',
+                automargin: true,
+                rangeslider: { // Add rangeslider configuration
+                  autorange: true, // Set to false if you want to set initial range
+              }
+            },
+            yaxis: {
+                title: 'Total Distance',
+            },
+        };
+
+        var barConfig = { responsive: true };
+
+        // Create or update the bar chart in the specified container
+        Plotly.newPlot('alldata-container', [barTrace], barLayout, barConfig);
+        $('#alldata-container #loading').hide();
+    },
+    error: function(error) {
+        console.error(error);
+    },
+    complete: function() {
+        // Remove loading message or spinner after the request is complete
+        $('#alldata-container #loading').hide();
+    }
+});
+          });
+      });
+  </script>
+    <div class="content-wrapper">
+      <div id="result-container" ></div>
+  </div>
+   
+
+</body>
+</html>

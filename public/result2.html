@@ -1,0 +1,189 @@
+<!-- result2.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result Page</title>
+    <!-- Add any additional styles or scripts here -->
+         
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/bootstrap-extended.min.css">
+  <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/fonts/simple-line-icons/style.min.css">
+  <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/colors.min.css">
+  <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+  <script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.5/umd/popper.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.16/css/dataTables.bootstrap4.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+</head>
+<style>
+  .alldata-container-custom-height {
+    height: 400px; 
+  }
+</style>
+<body>
+    <br>
+  <br>
+    <div class="container-fluid">
+        <div class="card mb-4">
+            <div class="card-header">
+              <p class="bold-uppercase" style="color: #141439;">DASHBOARD</p>
+            </div>
+                 <div class="card-body">
+
+    <div class="row">
+        <div class="col-lg-9">
+
+          <div class="card mb-3">
+            <div class="card-header">
+               TOP5 Customers</div>
+               <div class="card-body">
+
+              <canvas id="myChart">
+    
+              </canvas>
+              <script>
+                // Your dynamic data
+                var dynamicData = {{toparray}};
+                // Extract EndOdometer values
+                var endOdometerValues = dynamicData.map(item => item.EndOdometer);
+                var doughnutLabelsLine = {
+                  id: 'doughnutLabelsLine',
+                  afterDraw(chart,args,options){
+                    const { ctx, chartArea: { top, bottom, left, right, width, height} } = chart;
+                    chart.data.datasets.forEach((dataset, i) => {
+                      chart.getDatasetMeta(i).data.forEach((datapoint, index) => {
+                        const { x, y} = datapoint.tooltipPosition();
+        
+                        const halfwidth = width / 2;
+                        const halfheight = height / 2;
+                        const xLine = x >= halfwidth ? x + 15 : x - 15;
+                        const yLine = y >= halfheight ? y + 15 : y - 15;
+                        const extraLine = x >= halfwidth ? 15 : -15;
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(x, y);
+                        ctx.lineTo(xLine, yLine)
+                        ctx.lineTo(xLine + extraLine, yLine);
+                        ctx.strokeStyle = dataset.borderColor[index];
+                        ctx.stroke();
+                        const textWidth = ctx.measureText(chart.data.labels[index]).width;
+                        ctx.font = '13px Roboto sans-serif';
+                        
+                        const textXposition = x >= halfwidth ? 'left' : 'right';
+                        ctx.textAlign = textXposition;
+                        ctx.textBaseline = 'middle';
+                        ctx.strokeStyle = dataset.borderColor[index];
+                        ctx.fillText(chart.data.labels[index], xLine + extraLine, yLine);
+        
+                      }
+                      )
+        
+                    })
+        
+                  }
+                  
+                }
+                var config = {
+                  type: 'doughnut',
+                  
+                  data: {
+                    datasets: [
+                      {
+                        data: endOdometerValues,
+                        backgroundColor: ['#FF4C00', '#FF0080', '#FF00E5', '#B200FF', '#4C00FF'],
+                        borderColor: ['#FF4C00', '#FF0080', '#FF00E5', '#B200FF', '#4C00FF'],
+                        borderWidth: 1,
+                        cutout: '80%',
+                        borderRadius: 30
+                      }],
+                    labels: dynamicData.map(item => `${item.vehicle} - ${item.EndOdometer} km`),
+        
+                  },
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                       display:false
+                      },
+                      title: {
+                        display: true,
+                        text: 'Top 5 Customers',
+                        font: {
+                          size: 16, 
+                          family: 'Roboto sans-serif'
+        
+                        }
+                        
+                      }
+                    }
+                  },
+                  plugins: [doughnutLabelsLine],
+                };
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, config);
+              </script>
+           
+              
+           
+      </div>
+      <div class="card-footer small text-muted"></div>
+    </div>
+    
+  </div>
+  <div class="col-lg-3">
+    <div class="card mb-3">
+      <div class="card-header text-center">
+        Vehicles Activity
+      </div>
+      <div class="card-body">
+        <!-- First smaller card -->
+        <div class="card mb-3"  style="background-color: #f3bae7;">
+          <div class="card-header text-center">
+Active          
+</div>
+          <div class="card-body">
+          <p style="font-weight: bold; font-size:25px; text-align:center; color: #d8139d;">  {{nonZeroCount}}</p>
+          </div>
+        </div>
+        <!-- Second smaller card -->
+        <div class="card mb-3" style="background-color: #c99278;">
+          <div class="card-header text-center">
+In active  
+        </div>
+          <div class="card-body">
+            <!-- Content for the second smaller card -->
+           <p style="font-weight: bold; font-size:25px; text-align:center; color: #e2610b;"> {{countOfZeroCounts}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="card mb-3" style="overflow:auto;">
+    <div class="card-header text-center">Average Odo</div>
+    <div class="card-body">
+      
+     
+      <div id="alldata-container" class="alldata-container-custom-height" style="overflow:auto;">
+      
+        <div id="loading" style="text-align: center;  color: rgb(161, 126, 11);">
+          <i class="fas fa-spinner fa-spin fa-2x"></i>
+          <p>Loading...</p>
+        </div>
+  
+</div>
+</body>
+</body>
+</html>

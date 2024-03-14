@@ -1,0 +1,586 @@
+
+<style>
+    .custom-padding {
+      padding-left: 14rem !important; /* Use !important to override conflicting styles */
+    }
+    .orange {
+      color: orange;
+  }
+  .alldata-container-custom-height {
+    height: 400px; 
+  }
+  .line-chart-container-custom-height {
+    height: 350px; 
+  }
+  </style>
+     
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/bootstrap-extended.min.css">
+  <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/fonts/simple-line-icons/style.min.css">
+  <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/colors.min.css">
+  <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+  <script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.5/umd/popper.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.16/css/dataTables.bootstrap4.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+  <br>
+  <br>
+    <div class="container-fluid">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="bold-uppercase" style="color: #141439;">{{selectedTable}}</h3>
+        </div>
+             <div class="card-body">
+  
+      <!-- Icon Cards-->
+      <div class="row "> <!-- Add a custom class for more specific targeting -->
+        <div class="col-xl-3 col-sm-6 mb-3">
+          <div class="card text-white bg-primary o-hidden h-100">
+            <div class="card-body">
+              <div class="card-body-icon">
+              </div>
+              <div class="mr-5" style="font-weight: bold; font-size:15px;">Average Km/day</div>
+            </div>
+            <a class="card-footer text-white clearfix small z-1" href="#">
+              <span class="float-left" style="font-weight: bold; font-size:15px;">{{averageKmPerDay}}</span>
+              <span class="float-right">
+              </span>
+            </a>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-3">
+          <div class="card text-white bg-warning o-hidden h-100">
+            <div class="card-body">
+              <div class="card-body-icon">
+              </div>
+              <div class="mr-5"style="font-weight: bold; font-size:15px;">Average ON hours</div>
+            </div>
+            <a class="card-footer text-white clearfix small z-1" href="#">
+              <span class="float-left" style="font-weight: bold; font-size:15px;">{{formattedAverageDuration}}</span>
+              <span class="float-right">
+              </span>
+            </a>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-3">
+          <div class="card text-white bg-success o-hidden h-100">
+            <div class="card-body">
+              <div class="card-body-icon">
+              </div>
+              <div class="mr-5"style="font-weight: bold; font-size:15px;">Average OFF hours</div>
+            </div>
+            <a class="card-footer text-white clearfix small z-1" href="#">
+              <span class="float-left"style="font-weight: bold; font-size:15px;">{{formattedAverageDurationSubtraction}}</span>
+              <span class="float-right">
+              </span>
+            </a>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-3">
+          <div class="card text-white bg-danger o-hidden h-100">
+            <div class="card-body">
+              <div class="card-body-icon">
+              </div>
+              <div class="mr-5"style="font-weight: bold; font-size:15px;">Ignition On/Off count</div>
+            </div>
+            <a class="card-footer text-white clearfix small z-1" href="#">
+              <span class="float-left"style="font-weight: bold; font-size:15px;">{{filteredSumTimeDifferenceLength}}</span>
+              <span class="float-right">
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card mb-3">
+            <div class="card-header text-center">
+              Average Battery Voltage </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-6 my-auto">
+                    <canvas id="chart1" width="280" height="225"></canvas>    
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 text-center my-auto">
+                  <div class="h4 mb-0 text-success">50V to 54.6V</div>
+                  <div class="small text-muted">Good</div>
+                  <hr>
+                  <div class="h4 mb-0" style ="color:orange">46V to 50V</div>
+                  <div class="small text-muted">Nominal</div>
+                  <hr>
+                  <div class="h4 mb-0 text-danger">Below 45V</div>
+                  <div class="small text-muted">Bad</div>
+                  
+                </div>    
+              </div>
+  
+            </div>
+  
+                <script>
+  
+                                                          var voltage = '{{avgvoltage}}';
+                                                          const guageNeedle = {
+                                                            id: "guageNeedle",
+                                                            afterDatasetsDraw: (chart) => {
+                                                              const {
+                                                                ctx,
+                                                                chartArea: { width }
+                                                              } = chart;
+                                                              ctx.save();
+                                                          
+                                                              let angle;
+                                                          
+                                                              if (parseFloat(voltage) === 0) {
+                                                                // Handle special case for voltage = 0
+                                                                angle = Math.PI; // Set a fixed angle for voltage = 0
+                                                              } else {
+                                                                angle =
+                                                                  Math.PI *
+                                                                    ((parseFloat(voltage) - 41) / 14.5) *
+                                                                    chart.options.plugins.pointer.percentage +
+                                                                  Math.PI;
+                                                              }
+                                                          
+                                                              const cx = width / 2;
+                                                              const cy = chart._metasets[0].data[0].y;
+                                                          
+                                                              ctx.translate(cx, cy);
+                                                              ctx.rotate(angle);
+                                                              ctx.beginPath();
+                                                              ctx.moveTo(0, -3);
+                                                              ctx.lineTo(cx, 0);
+                                                              ctx.lineTo(0, 3);
+                                                              ctx.fillStyle = "black";
+                                                              ctx.fill();
+                                                              ctx.rotate(-angle);
+                                                              ctx.translate(-cx, -cy);
+                                                              ctx.beginPath();
+                                                              ctx.arc(cx, cy, 5, 0, 10);
+                                                              ctx.fill();
+                                                              ctx.restore();
+                                                            }
+                                                          };
+                                                          
+                                                          // ... (rest of your code)
+                                                          
+                                                          const speedLabel = {
+                                                            id: "speedLabel",
+                                                            afterDatasetsDraw: (chart) => {
+                                                              const { ctx } = chart;
+                                                          
+                                                              var data = chart._metasets[0].data[0];
+                                                              var centerX = data.x;
+                                                              var centerY = data.y;
+                                                          
+                                                              ctx.fillStyle = "black";
+                                                              ctx.font = `bolder 1.5em roboto`;
+                                                              ctx.textAlign = "center";
+                                                              ctx.fillText(voltage + " V", centerX, centerY + 24);
+                                                            }
+                                                          };
+                                                          
+                                                          var pointer = {
+                                                            id: "pointer",
+                                                            defaults: {
+                                                              percentage: 0,
+                                                              maxAngle: 0
+                                                            },
+                                                            afterDraw: function (chart, args, opt) {
+                                                              const { ctx } = chart;
+                                                              const angle =
+                                                                voltage === "0" || voltage === "41"
+                                                                  ? fixedAngle
+                                                                  : Math.PI *
+                                                                      ((parseFloat(voltage) - 40) / 10) *
+                                                                      chart.options.plugins.pointer.percentage +
+                                                                    Math.PI;
+                                                          
+                                                              var data = chart._metasets[0].data[0];
+                                                              var radius = data.innerRadius + (data.outerRadius - data.innerRadius) / 2;
+                                                          
+                                                              var centerX = data.x;
+                                                              var centerY = data.y;
+                                                          
+                                                              var x = centerX + radius * Math.cos(angle);
+                                                              var y = centerY + radius * Math.sin(angle);
+                                                              ctx.save();
+                                                              ctx.beginPath();
+                                                              ctx.lineWidth = 6;
+                                                              ctx.arc(x, y, 12, 0, 2 * Math.PI);
+                                                              ctx.stroke();
+                                                              ctx.restore();
+                                                            }
+                                                          };
+                                                          var options = {
+                                                            type: "doughnut",
+                                                            data: {
+                                                              datasets: [
+                                                                {
+                                                                  data: [40, 10, 0],
+                                                                  backgroundColor: (context) => {
+                                                                    const { ctx, chartArea } = context.chart;
+                                                                    if (!chartArea) return;
+                                                                    const gradientSegment = ctx.createLinearGradient(
+                                                                      chartArea.left,
+                                                                      0,
+                                                                      chartArea.right,
+                                                                      0
+                                                                    );
+                                                                    gradientSegment.addColorStop(0, "rgb(254,1,1)");
+                                                                    gradientSegment.addColorStop(0.5, "rgb(254,205,85)");
+                                                                    gradientSegment.addColorStop(1, "rgb(144,237,144)");
+                                                          
+                                                                    return gradientSegment;
+                                                                  },
+                                                                  borderWidth: 0
+                                                                }
+                                                              ]
+                                                            },
+                                                            options: {
+                                                              cutout: 80,
+                                                              rotation: -90,
+                                                              circumference: 180,
+                                                              animation: {
+                                                                onProgress: function (context) {
+                                                                  if (context.initial) {
+                                                                    this.options.plugins.pointer.percentage =
+                                                                      context.currentStep / context.numSteps;
+                                                                  }
+                                                                }
+                                                              },
+                                                              responsive: false,
+                                                          
+                                                              maintainAspectRatio: false,
+                                                              legend: { display: false },
+                                                          
+                                                              plugins: {
+                                                                tooltip: { enabled: false },
+                                                                pointer: { currentAngle: 1 }
+                                                              }
+                                                            },
+                                                            plugins: [guageNeedle, speedLabel]
+                                                          };
+                                                          const chart = document.getElementById("chart1");
+                                                          new Chart(chart, options);
+                                                          
+                           </script>
+          
+  
+            </div>
+          </div>
+        <div class="col-lg-6">
+          <div class="card mb-3">
+            <div class="card-header text-center">
+               Acceleration Counts</div>
+               <br>
+            <div class="card-body">
+              <ul id="speedList"></ul>
+              <label for="minValue" >Minimum Value:</label>
+              <input type="number" class="h4 mb-0 text-primary" id="minValue" step="0.01" value="5">
+              <br>
+  
+              <label for="maxValue" style="font-size: 16px;">Maximum Value:</label>
+              <input type="number" class="h4 mb-0 text-primary" id="maxValue" step="0.01" value="25">
+              <br>
+                                                            <br>
+                                                            <br>
+              <h1> Count: <span id="idCountDisplay" class="big-text"></span></h1>
+              <script>
+                // Assuming 'data' is an array of objects
+                const data = {{data}}; // Replace {{data}} with your actual data
+                
+                function calculateIdCount() {
+                    const minValue = parseFloat(document.getElementById("minValue").value);
+                    const maxValue = parseFloat(document.getElementById("maxValue").value);
+                    const speedArray = data.map(item => item.Speed);
+                    const subLists = [];
+                    let start = 0;
+                    
+                    for (let i = 1; i < speedArray.length; i++) {
+                        if (speedArray[i] < speedArray[i - 1]) {
+                            subLists.push(speedArray.slice(start, i));
+                            start = i;
+                        }
+                    }
+                    subLists.push(speedArray.slice(start)); // Add the last sub-list
+                    let id_count = 0;
+                    let id_list = [];
+                
+                    for (const unit of subLists) {
+                        if (Math.min(...unit) <= minValue && Math.max(...unit) >= maxValue && new Set(unit).size > 1) {
+                            id_count++;
+                            id_list.push(unit);
+                        }
+                    }
+                
+                    // Display id_count in the HTML
+                    document.getElementById("idCountDisplay").textContent = id_count;
+                }
+                
+                calculateIdCount();
+                
+                // Add event listeners to the input elements
+                document.getElementById("minValue").addEventListener("input", calculateIdCount);
+                document.getElementById("maxValue").addEventListener("input", calculateIdCount);
+                </script>
+                
+              </div>
+              </div>
+              </div>
+              </div>
+     
+  
+        <div class="card mb-3">
+          <div class="card-header text-center">Utilization Heatmap</div>
+          <div class="card-body">
+            <div id="heatmap" width="100%" height="30"></div>
+            
+            <script>
+              $(document).ready(function () {
+                const avgKmByDayAndHourJSON1 = '{{avgKmByDayAndHourJSON}}';
+                const avgKmByDayAndHourJSON2 = JSON.parse(avgKmByDayAndHourJSON1);
+                const dates3 = Object.keys(avgKmByDayAndHourJSON2);
+                const z = dates3.map((date) => {
+                  return avgKmByDayAndHourJSON2[date].map(entry => entry.avgKm || 0);
+                });
+            
+                const customColorScale = [
+                  ['0.0', 'rgb(189, 177, 180)'],
+                  ['0.111111111111', 'rgb(106, 215, 39)'],
+                  ['0.222222222222', 'rgb(7, 184, 48)'],
+                  ['0.333333333333', 'rgb(253,174,97)'],
+                  ['0.444444444444', 'rgb(254,224,144)'],
+                  ['0.555555555556', 'rgb(232, 122, 19)'],
+                  ['0.666666666667', 'rgb(214, 103, 114)'],
+                  ['0.777777777778', 'rgb(176, 23, 38)'],
+                  ['0.888888888889', 'rgb(176, 23, 38)'],
+                  ['1.0', 'rgb(179, 9, 26)']
+                ];
+            
+                const data = [{
+                  x: Array.from({ length: 24 }, (_, i) => i), // Hours
+                  y: dates3, // Dates only
+                  z: z,
+                  type: 'heatmap',
+                  colorscale: customColorScale, // Use the custom color scale
+                  colorbar: {
+                    title: 'km',
+                    titleside: "right"
+                  }
+                }];
+            
+                const layout3 = {
+             
+                  xaxis: {
+                    title: 'Hour',
+                    tickmode: 'array',
+                    tickvals: Array.from({ length: 24 }, (_, i) => i),
+                    ticktext: Array.from({ length: 24 }, (_, i) => i.toString()),
+                  },
+                  yaxis: {
+                    tickvals: dates3,
+                    ticktext: dates3.map(function (date) {
+                      var dateObj = new Date(date);
+                      var weekday = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+                      var dateString = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                      return dateString + "(" + weekday + ")";
+                    }),
+                    tickangle: -45,
+                    tickfont: {
+                      size: 8 // Adjust the font size for y-axis ticks
+                    }
+                  },
+                  zaxis: {
+                    title: 'km'
+                  }
+                };
+                var config = {responsive: true}
+  
+            
+                // Render the heatmap
+                Plotly.newPlot('heatmap', data, layout3, config);
+              });
+            </script>
+            
+          </div>
+        </div>
+      
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card mb-3">
+              <div class="card-header text-center">
+                 MaxSpeed Bar Chart </div>
+              <div class="card-body">
+            
+                    <div id="myDiv" height="30">
+                    <script>
+                                                        
+                      const maxSpeedDataJSON1 = '{{maxSpeedDataJSON1}}';
+                      const maxSpeedData = JSON.parse(maxSpeedDataJSON1);
+                      const date = Object.keys(maxSpeedData);
+                      const maxSpeeds = Object.values(maxSpeedData);
+  
+                      var trace1 = {
+                        x: date, 
+                        y: maxSpeeds, 
+                        type: 'bar',
+                        name: 'Max Speed',
+                        line:{
+                          color: 'rgb(255, 99, 132)', // Customize the color of the line
+                            shape: 'spline', // Use 'spline' for a smooth line
+                            smoothing: 1.3
+                        },
+                        marker: {
+                          color: '#0275D8', // Customize the color of the markers
+                          size: 7, 
+                          symbol: 'circle' 
+                      }
+                      };
+                      var layout1 = {
+                        autosize: true, // Enable autosizing
+                    
+                        xaxis: {
+                            title: 'Date',
+                            showgrid: false
+  
+                        },
+                        yaxis: {
+                            title: 'Speed'
+                        },
+                     
+                    };
+                    var config = {responsive: true}
+  
+                      Plotly.newPlot('myDiv',[trace1], layout1,config);
+                  </script>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card mb-3">
+              <div class="card-header text-center">
+                 Average Speed </div>
+              <div class="card-body">
+                <div id="speedGraph"></div>
+                <script>
+                         // Parse the JSON data passed from the server
+                  const avgSpeedDataMergedJSON = '{{avgSpeedDataMergedJSON}}';
+                  const avgSpeedData = JSON.parse(avgSpeedDataMergedJSON);
+  
+                  // Extract the dates and speeds from the JSON data
+                  const dates = Object.keys(avgSpeedData);
+                  const avgSpeeds = Object.values(avgSpeedData);
+  
+                  const trace2 = {
+                    x: dates,
+                    y: avgSpeeds,
+                    type: 'scatter',
+                    mode: 'lines+markers', // Display lines and markers
+                    name: 'Avg Speed',
+                    line: {
+                        color: 'rgb(153, 102, 255)', // Customize the color of the line
+                        shape: 'spline', // Use 'spline' for a smooth line
+                        smoothing: 1.3 // Adjust the smoothing value (1.3 is a reasonable starting point)
+                    },
+                    marker: {
+                        color: 'rgb(75, 192, 192)', // Customize the color of the markers
+                        size: 7, 
+                        symbol: 'circle' 
+                    }
+                };
+                
+                const layout = {
+                  autosize: true, // Enable autosizing
+             
+                    xaxis: {
+                        title: 'Date',
+                        showgrid: false
+  
+                    },
+                    yaxis: {
+                        title: 'Speed',
+  
+                    }
+                };
+                var config = {responsive: true}
+  
+                Plotly.newPlot('speedGraph', [trace2], layout,config);
+              </script>
+                </div>
+                </div>
+                </div>
+                </div>
+      
+        <div class="card mb-3">
+          <div class="card-header text-center">Battery Voltage and Range Chart</div>
+          <div class="card-body">
+            <div id="lineChart"></div>
+            <script>
+              const voltageCurveJson = {{voltagecurve}};
+              const distancecurveJson = {{distancecurve}};
+          
+              // Primary Y-axis data
+              const xData = voltageCurveJson.map(entry => entry.concatenatedDate);
+              const yData = voltageCurveJson.map(entry => entry.voltagedata
+              );
+          
+              // Secondary Y-axis data
+              const x2 = distancecurveJson.map(entry => entry.concatenatedDateTime);
+              const y2 = distancecurveJson.map(entry => entry.Distance);
+          
+              // Create line traces for primary and secondary axes
+              const trace1 = {
+                  x: xData,
+                  y: yData,
+                  type: 'line',
+                  name: 'Voltage',
+                  marker: {
+                      color: 'green',
+                  },
+              };
+          
+              const trace3 = {
+                  x: x2,
+                  y: y2,
+                  type: 'bar',
+                  name: 'Distance',
+                  yaxis: 'y2',  // Associate with the secondary y-axis
+                  marker: {
+                      color: 'blue',
+                  },
+              };
+          
+              const layout8 = {
+  
+                  xaxis: {
+                      title: 'Time ',
+                  },
+                  yaxis: {
+                      title: 'Voltage',
+  
+                  },
+                  yaxis2: {
+                      title: 'Distance',
+                      overlaying: 'y',
+                      side: 'right',
+                      range: [0, 50],
+  
+                  },
+              };
+              var config = {responsive: true}
+  
+              Plotly.newPlot('lineChart', [trace1, trace3], layout8,config);
+          </script>
+          </div>
+        </div>
+
+        
+        
